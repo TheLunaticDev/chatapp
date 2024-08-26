@@ -1,0 +1,35 @@
+{% extends 'base/base.html' %}
+
+{% block meta_description %}View ads on OnlyMarriage{% endblock %}
+{% block title %}Ads List{% endblock %}
+{% block content %}
+    <h1>Ads List</h1>
+
+    {% if ad_list %}
+        <ul>
+            {% for ad in ad_list %}
+                <li>{{ ad.created_on|date:"M d" }} | <a href="/ads/info/{{ ad.id }}">{{ ad.title|slice:":50" }}{% if ad.title|length > 50 %}...{% endif %}</a> | {{ ad.get_location_display }}</li>
+            {% endfor %}
+        </ul>
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if ad_list.has_previous %}
+                    <a href="?page_no=1">&laquo; first</a>
+                    <a href="?page_no={{ ad_list.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ ad_list.number }} of {{ ad_list.paginator.num_pages }}.
+                </span>
+
+                {% if ad_list.has_next %}
+                    <a href="?page_no={{ ad_list.next_page_number }}">next</a>
+                    <a href="?page_no={{ ad_list.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No ads available.</p>
+    {% endif %}
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm
 
 
@@ -38,7 +39,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect("/register/")
+                return redirect("/")
             else:
                 error = "Authentication Error!"
     else:
@@ -51,3 +52,9 @@ def login_view(request):
     }
 
     return render(request, "base/login.html", context)
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect(login_view)
