@@ -1,11 +1,40 @@
+import json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import ad
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from .models import ad, tag
+from btcpay import BTCPayClient
+import btcpay.crypto
+from .forms import AdForm
+from base.views import get_btcpay_client
+from .models import Payment
 
 
+@login_required
+def flag_ad_view(request, ad_id):
+    requested_ad = get_object_or_404(ad, id=ad_id)
+
+    if request.user in requested_ad.flags.all():
+        messages.error(request, "You've already flagged this ad.")
+    else:
+        requested_ad.flags.add(request.user)
+        requested_ad.check_flags()
+        messages.success(request, "Ad has been flagged.")
+
+    return redirect(show_ads_view)
+
+
+@login_required
 def show_ads_view(request, page_no=1):
-    ad_list = ad.objects.filter(is_active=True).order_by("-created_on")
+    ad_list = (
+        ad.objects.filter(is_active=True, is_paid=True)
+        .exclude(flags=request.user)
+        .order_by("-created_on")
+    )
     paginator = Paginator(ad_list, 50)
 
     try:
@@ -23,7 +52,60 @@ def show_ads_view(request, page_no=1):
 
 @login_required
 def create_ads_view(request):
-    context = {}
+    if request.method == "POST":
+        form = AdForm(request.POST)
+        if form.is_valid:
+            new_ad = form.save(commit=False)
+            new_ad.poster = request.user
+            new_ad.is_paid = False
+            new_ad.save()
+
+            tags = form.cleaned_data["tags"]
+            if tags:
+                tag_names = [c_tag.strip() for c_tag in tags.split(",")]
+                for tag_name in tag_names:
+                    new_tag, created = tag.objects.get_or_create(name=tag_name)
+                    new_ad.tags.add(new_tag)
+
+            payment = Payment.objects.create(linked_ad=new_ad, payment_status="pending")
+
+            client = get_btcpay_client()
+
+            try:
+                invoice = client.create_invoice(
+                    {
+                        "price": "0.50",
+                        "currency": "USD",
+                        "orderID": str(new_ad.id),
+                        "itemDesc": new_ad.title,
+                        "redirectURL": request.build_absolute_uri(
+                            f"/ads/payment_success/{new_ad.id}"
+                        ),
+                        "notificationURL": request.build_absolute_uri(
+                            f"/ads/payment_notification/"
+                        ),
+                    }
+                )
+
+                payment.invoice_id = invoice["id"]
+                payment.save()
+
+                return redirect(invoice["url"])
+            except Exception as e:
+                print(e)
+                return render(
+                    request,
+                    "ads/create_ads.html",
+                    {
+                        "form": form,
+                        "error": "Failed to create payment. Please try again.",
+                    },
+                )
+    else:
+        form = AdForm()
+
+    context = {"form": form}
+
     return render(request, "ads/create_ads.html", context)
 
 
@@ -48,12 +130,12 @@ def ads_info_view(request, id):
             "description": requested_ad.description,
             "category": requested_ad.get_category_display(),
             "location": requested_ad.get_location_display(),
-            "poster": requested_ad.poster.username,
+            "poster": requested_ad.poster,
             "created_on": requested_ad.created_on,
             "last_updated": requested_ad.updated_on,
-            "favorite": requested_ad.favorites,
             "tags": ad_tags,
         }
+
     else:
         requested_ad = None
 
@@ -65,6 +147,132 @@ def ads_info_view(request, id):
 
 
 @login_required
-def edit_ads_view(request):
-    context = {}
+def edit_ads_view(request, ad_id):
+    ad_to_be_edited = get_object_or_404(ad, pk=ad_id)
+
+    if ad_to_be_edited.poster != request.user:
+        return redirect("home")
+
+    if request.method == "POST":
+        form = AdForm(request.POST, instance=ad_to_be_edited)
+        if form.is_valid():
+            updated_ad = form.save(commit=False)
+            updated_ad.save()
+
+            updated_ad.tags.clear()
+            tags = form.cleaned_data["tags"]
+            if tags:
+                tag_names = [c_tag.strip() for c_tag in tags.split(",")]
+                for tag_name in tag_names:
+                    new_tag, created = tag.objects.get_or_create(name=tag_name)
+                    updated_ad.tags.add(new_tag)
+
+            return redirect("home")
+    else:
+        initial_tags = ", ".join(ad_to_be_edited.tags.values_list("name", flat=True))
+        form = AdForm(instance=ad_to_be_edited, initial={"tags": initial_tags})
+
+    context = {
+        "form": form,
+    }
     return render(request, "ads/edit_ads.html", context)
+
+
+@login_required
+def profile_view(request, username, page_no=1):
+    profile_user = get_object_or_404(User, username=username)
+    user_ads = ad.objects.filter(poster=profile_user).order_by("-updated_on")
+
+    paginator = Paginator(user_ads, 10)
+    try:
+        page_ads = paginator.page(page_no)
+    except PageNotAnInteger:
+        page_ads = paginator.page(1)
+    except EmptyPage:
+        page_ads = paginator.page(paginator.num_pages)
+
+    is_own_profile = request.user == profile_user
+
+    context = {
+        "ad_list": page_ads,
+        "profile_user": profile_user,
+        "is_own_profile": is_own_profile,
+    }
+
+    return render(request, "ads/profile.html", context)
+
+
+@login_required
+def delete_ad(request, ad_id):
+    ad_to_be_deleted = get_object_or_404(ad, id=ad_id)
+
+    if ad_to_be_deleted.poster != request.user:
+        return HttpResponseForbidden("You are not allowed to delete this Ad.")
+
+    if request.method == "POST":
+        ad_to_be_deleted.delete()
+        return redirect("home")
+
+    return render(request, "ads/delete_confirmation.html", {"ad": ad_to_be_deleted})
+
+
+@login_required
+def create_payment(request, ad_id):
+
+    ad_p = get_object_or_404(
+        ad, id=ad_id, poster=request.user, payment_status="pending"
+    )
+
+    client = get_btcpay_client()
+
+    invoice = client.create_invoice(
+        {
+            "price": 10.00,
+            "currency": "USD",
+            "orderID": str(ad_p.id),
+            "buyerEmail": request.user.email,
+            "redirectURL": request.build_absolute_uri("/payment-success/"),
+        }
+    )
+
+    print(invoice["url"])
+
+    ad_p.payment_id = invoice["id"]
+    ad.save()
+
+    return redirect(invoice["url"])
+
+
+@login_required
+def payment_success(request, ad_id):
+    ad_p = get_object_or_404(ad, id=ad_id, poster=request.user)
+    payment = get_object_or_404(Payment, linked_ad=ad_p)
+
+    if payment.payment_status == "completed":
+        ad.is_paid = True
+        ad.save()
+        return HttpResponse("Payment successful! Your ad is now live.")
+    else:
+        return HttpResponse("Payment is not yet confirmed. Please wait a moment.")
+
+
+@csrf_exempt
+def payment_notification_view(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        invoice_id = data.get("invoiceId")
+
+        payment = Payment.objects.filter(invoice_id=invoice_id).first()
+
+        if payment:
+            payment_status = data.get("staus")
+            payment.payment_status = payment_status
+            payment.save()
+
+            if payment_status == "complete":
+                ad_p = payment.ad
+                ad_p.is_paid = True
+                ad.save()
+
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "invaild request"}, status=400)

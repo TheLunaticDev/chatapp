@@ -1,13 +1,76 @@
 {% extends 'base/base.html' %}
 
+{% load form_filters %}
+
 {% block meta_description %}Register a new account on OnlyMarriage{% endblock %}
 {% block title %}Register{% endblock %}
 {% block content %}
-    <h1>Register New User</h1>
-    <form action="/register/" method="POST">
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Register New User</h1>
+    <form action="/register/" method="POST" class="space-y-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Register">
+
+        {% if form.errors %}
+            <div class="mb-4">
+                <ul class="text-red-600">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li class="text-sm">
+                                {% for error in field.errors %}
+                                    {{ field.label }}: {{ error }}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                        <li>
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Username</label>
+            {{ form.username|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.username.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.username.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+            {{ form.email|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.email.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.email.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+            {{ form.password1|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.password1.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.password1.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+            {{ form.password2|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.password2.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.password2.errors }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Register
+        </button>
     </form>
-    <p>Already have an account? <a href="/login/">Login</a> instead!</p>
+    <p class="mt-4 text-sm text-gray-600">
+        Already have an account? <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a> instead!
+    </p>
+</div>
 {% endblock %}

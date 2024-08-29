@@ -1,8 +1,24 @@
+import pickle
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm
+from .models import BTCPayClientModel
+
+
+def get_btcpay_client():
+    try:
+        btcpay_client_model = BTCPayClientModel.objects.first()
+
+        if btcpay_client_model is None:
+            raise ValueError("No BTCPay client found in the database.")
+
+        client = pickle.loads(btcpay_client_model.client_data)
+
+        return client
+    except Exception as e:
+        raise ValueError(f"Failed to retrieve or unpickle BTCPay client: {e}")
 
 
 def register_view(request):

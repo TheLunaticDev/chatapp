@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+{% block meta_description %}Profile of {{ profile_user.username }}{% endblock %}
+{% block title %}
+    {% if is_own_profile %}
+        My Ads
+    {% else %}
+        {{ profile_user.username }}'s Ads
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-4">
+        {% if is_own_profile %}
+            Your Ads
+        {% else %}
+            Ads posted by {{ profile_user.username }}
+        {% endif %}
+    </h1>
+
+    {% if is_own_profile %}
+        <a href="{% url 'create_ad' %}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">Create a new Ad!</a>
+    {% endif %}
+
+    {% if not is_own_profile %}
+        <a href="{% url 'start_conversation_view' profile_user.id %}" class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">Start a Conversation</a>
+    {% endif %}
+
+    {% if ad_list %}
+        <ul class="list-disc pl-5 space-y-3">
+            {% for ad in ad_list %}
+                <li class="flex justify-between items-center p-4 border-b border-gray-200">
+                    <a href="{% url 'ad_info' ad.id %}" class="text-blue-600 hover:underline">{{ ad.title }}</a>
+                    <span class="text-sm text-gray-600">{{ ad.created_on|date:"M d, Y" }}</span>
+                    {% if is_own_profile %}
+                        <a href="{% url 'edit_ad' ad.id %}" class="text-blue-600 hover:underline">Edit</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="mt-6 flex justify-between items-center">
+            {% if ad_list.has_previous %}
+                <a href="{% url 'profile' profile_user.username ad_list.previous_page_number %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Previous</a>
+            {% endif %}
+
+            <span class="text-sm text-gray-600">Page {{ ad_list.number }} of {{ ad_list.paginator.num_pages }}</span>
+
+            {% if ad_list.has_next %}
+                <a href="{% url 'profile' profile_user.username ad_list.next_page_number %}" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Next</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="text-gray-600 mt-4">
+            {% if is_own_profile %}
+                You have not created any ads yet.
+            {% else %}
+                This user has not posted any ads yet.
+            {% endif %}
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

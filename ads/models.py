@@ -164,8 +164,23 @@ class ad(models.Model):
     )
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
-    favorites = models.PositiveIntegerField()
+    flags = models.ManyToManyField(User, related_name="flagged_ads", blank=True)
     is_active = models.BooleanField(default=True)
+    is_paid = models.BooleanField(default=False)
+
+    def flag_count(self):
+        return self.flags.count()
+
+    def check_flags(self, flag_threshold=5):
+        if self.flag_count() >= flag_threshold:
+            self.is_active = False
+            self.save()
 
     def __str__(self):
         return self.title
+
+
+class Payment(models.Model):
+    linked_ad = models.OneToOneField(ad, on_delete=models.CASCADE)
+    payment_status = models.CharField(max_length=20, default="pending")
+    invoice_id = models.CharField(max_length=100, blank=True, null=True)

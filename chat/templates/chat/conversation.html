@@ -1,0 +1,42 @@
+{% extends 'base/base.html' %}
+
+{% load form_filters %}
+
+{% block meta_description %}OnlyMarriage Conversations!{% endblock %}
+{% block title %}Conversation{% endblock %}
+{% block content %}
+    <h1 class="text-2xl font-bold mb-6">
+        Conversation with:
+        {% for participant in conversation.participants.all %}
+            {% if participant != user %}
+                <span class="text-blue-600">{{ participant.username }}</span>
+            {% endif %}
+        {% endfor %}
+    </h1>
+
+    <form method="post" class="bg-white p-4 rounded-lg shadow-md mt-6">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-4">
+                <label for="{{ field.id_for_label }}" class="block text-gray-700 font-medium mb-1">{{ field.label }}</label>
+                {{ field|add_class:"border border-gray-300 rounded-lg py-2 px-3 w-full" }}
+                {% if field.errors %}
+                    <p class="text-red-500 text-sm mt-1">{{ field.errors }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input type="submit" value="Send" class="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+    </form>
+
+    <div class="messages bg-gray-100 p-4 rounded-lg shadow-inner mb-6 space-y-4">
+        {% for message in messages %}
+            <div class="message bg-white p-3 rounded-lg shadow-md">
+                <p class="font-semibold text-gray-800">{{ message.sender.username }}:</p>
+                <p class="text-gray-700">{{ message.text }}</p>
+                <p class="text-xs text-gray-500 mt-1">{{ message.timestamp|date:"M d, Y h:i A" }}</p>
+            </div>
+        {% empty %}
+            <p class="text-gray-600">No messages yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

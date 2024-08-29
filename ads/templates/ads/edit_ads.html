@@ -1,7 +1,78 @@
 {% extends 'base/base.html' %}
 
-{% block meta_description %}Ad edit view for OnlyMarriage{% endblock %}
+{% load form_filters %}
+
+{% block meta_description %}Edit your ad on OnlyMarriage{% endblock %}
 {% block title %}Edit Ad{% endblock %}
 {% block content %}
-    <h1>Edit Ad</h1>
+<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Edit Ad</h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="mb-4">
+                <ul class="text-red-600">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li class="text-sm">
+                                {% for error in field.errors %}
+                                    {{ field.label }}: {{ error }}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                        <li>
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {{ form.non_field_errors }}
+
+        <div class="form-group">
+            {{ form.title|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.title.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.title.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.category|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.category.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.category.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.location|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.location.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.location.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.description|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.description.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.description.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.tags|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.tags.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.tags.errors }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Submit
+        </button>
+    </form>
+</div>
 {% endblock %}

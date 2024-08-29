@@ -1,0 +1,25 @@
+{% extends 'base/base.html' %}
+
+{% block meta_description %}OnlyMarriage Conversations!{% endblock %}
+{% block title %}ChatList{% endblock %}
+{% block content %}
+    <h1 class="text-2xl font-bold mb-4">Your Conversations</h1>
+    <ul class="space-y-4">
+        {% for conversation in conversations %}
+            <li class="bg-white shadow rounded-lg p-4 border border-gray-200 hover:bg-gray-100">
+                <a href="{% url 'conversation_view' conversation.id %}" class="text-blue-600 hover:text-blue-800">
+                    Conversation with
+                    {% for participant in conversation.participants.all %}
+                        {% if participant != user %}
+                            <span class="font-semibold">{{ participant.username }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </a>
+            </li>
+        {% empty %}
+            <li class="bg-white shadow rounded-lg p-4 border border-gray-200 text-gray-600">
+                No conversations available.
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

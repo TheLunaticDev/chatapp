@@ -3,33 +3,77 @@
 {% block meta_description %}View ads on OnlyMarriage{% endblock %}
 {% block title %}Ads List{% endblock %}
 {% block content %}
-    <h1>Ads List</h1>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Ads List</h1>
 
-    {% if ad_list %}
-        <ul>
-            {% for ad in ad_list %}
-                <li>{{ ad.created_on|date:"M d" }} | <a href="/ads/info/{{ ad.id }}">{{ ad.title|slice:":50" }}{% if ad.title|length > 50 %}...{% endif %}</a> | {{ ad.get_location_display }}</li>
-            {% endfor %}
-        </ul>
+        {% if ad_list %}
+            <div class="space-y-4">
+                {% for ad in ad_list %}
+                    <div class="bg-white border border-gray-300 rounded-lg shadow-md p-4 flex items-center space-x-4">
+                        <div class="flex-shrink-0 text-gray-500 text-sm">
+                            {{ ad.created_on|date:"F j, Y" }}
+                        </div>
+                        <div class="flex-1">
+                            <a href="/ads/info/{{ ad.id }}" class="text-blue-600 hove:text-blue-800 text-lg font-semibold">
+                                {{ ad.title|slice:":75" }}{% if ad.title|length > 75 %}...{% endif %}
+                            </a>
+                        </div>
+                        <div class="text-gray-600 text-sm">
+                            {{ ad.get_location_display }}
+                        </div>
+                    </div>
+                {% endfor %}
 
-        <div class="pagination">
-            <span class="step-links">
-                {% if ad_list.has_previous %}
-                    <a href="?page_no=1">&laquo; first</a>
-                    <a href="?page_no={{ ad_list.previous_page_number }}">previous</a>
-                {% endif %}
+            <div class="flex justify-center mt-8">
+                <nav aria-label="Page navigation">
+                    <ul class="flex items-center space-x-2">
+                        {% if ad_list.has_previous %}
+                            <li>
+                                <a href="?page_no=1" class="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-md">
+                                    First
+                                </a>
+                            </li>
+                            <li>
+                                <a href="?page_no={{ ad_list.previous_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-md">
+                                    Previous
+                                </a>
+                            </li>
+                        {% endif %}
 
-                <span class="current">
-                    Page {{ ad_list.number }} of {{ ad_list.paginator.num_pages }}.
-                </span>
-
-                {% if ad_list.has_next %}
-                    <a href="?page_no={{ ad_list.next_page_number }}">next</a>
-                    <a href="?page_no={{ ad_list.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-        </div>
-    {% else %}
-        <p>No ads available.</p>
-    {% endif %}
+                        {% for page_num in ad_list.paginator.page_range %}
+                            {% if ad_list.number == page_num %}
+                                <li>
+                                    <span class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                                        {{ page_num }}
+                                    </span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <a href="?page_no={{ page_num }}" class="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-md">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if ad_list.has_next %}
+                            <li>
+                                <a href="?page_no={{ ad_list.next_page_number }}" class="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-md">
+                                    Next
+                                </a>
+                            </li>
+                            <li>
+                                <a href="?page_no={{ ad_list.paginator.num_pages }}" class="px-4 py-2 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-md">
+                                    Last
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+       {% else %}
+            <div class="flex justify-center items-center h-64">
+                <p class="text-lg text-gray-500 font-semibold">No ads available.</p>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

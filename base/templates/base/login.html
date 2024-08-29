@@ -1,16 +1,60 @@
 {% extends 'base/base.html' %}
 
-{% block meta_description %}Log in to OnlyMarriage to continue.{% endblock %}
+{% load form_filters %}
+
+{% block meta_description %}Login to your account on OnlyMarriage{% endblock %}
 {% block title %}Login{% endblock %}
 {% block content %}
-    <h1>Login</h1>
-    {% if error %}
-    {{ error }}
-    {% endif %}
-    <form action="/login/" method="POST">
+<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Login to Your Account</h1>
+    <form action="/login/" method="POST" class="space-y-4">
         {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Login">
+
+        {% if form.errors %}
+            <div class="mb-4">
+                <ul class="text-red-600">
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <li class="text-sm">
+                                {% for error in field.errors %}
+                                    {{ field.label }}: {{ error }}
+                                {% endfor %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if form.non_field_errors %}
+                        <li>
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Username</label>
+            {{ form.username|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.username.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.username.errors }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+            {{ form.password|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+            {% if form.password.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.password.errors }}</p>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Login
+        </button>
     </form>
-    <p>Don't have an account? <a href="/register/">Register</a> Now!
+    <p class="mt-4 text-sm text-gray-600">
+        Don't have an account? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register</a> instead!
+    </p>
+</div>
 {% endblock %}

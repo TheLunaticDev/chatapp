@@ -1,7 +1,47 @@
 {% extends 'base/base.html' %}
 
+{% load form_filters %}
+
 {% block meta_description %}Ad creation UI for OnlyMarriage{% endblock %}
 {% block title %}Create new Ad{% endblock %}
 {% block content %}
-    <h1>Create new Ad</h1>
+    {% if error %}
+        {{ error }}
+    {% endif %}
+<div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Create new Ad</h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">Title</label>
+            {{ form.title|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"|safe }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">Category</label>
+            {{ form.category|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"|safe }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700">Location</label>
+            {{ form.location|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"|safe }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.tags.id_for_label }}" class="block text-sm font-medium text-gray-700">Tags</label>
+            {{ form.tags|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"|safe }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">Description</label>
+            {{ form.description|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"|safe }}
+        </div>
+
+        <p class="text-sm text-gray-700 bg-yellow-100 border-l-4 border-yellow-500 p-3 my-4">Please note that a small fee is required to post an ad. You will be redirected to our payment gateway after submitting the form.</p>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Submit
+        </button>
+    </form>
+</div>
 {% endblock %}

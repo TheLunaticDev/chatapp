@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+
+class BTCPayClientModel(models.Model):
+    client_data = models.BinaryField()
