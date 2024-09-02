@@ -43,13 +43,6 @@
         </div>
 
         <div class="form-group">
-            {{ form.category|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
-            {% if form.category.errors %}
-                <p class="mt-1 text-sm text-red-600">{{ form.category.errors }}</p>
-            {% endif %}
-        </div>
-
-        <div class="form-group">
             {{ form.location|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
             {% if form.location.errors %}
                 <p class="mt-1 text-sm text-red-600">{{ form.location.errors }}</p>
