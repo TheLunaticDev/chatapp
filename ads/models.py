@@ -17,68 +17,6 @@ class ad(models.Model):
         MEN_SEEKING_WOMEN = "mw"
         MEN_SEEKING_MEN = "mm"
 
-    class locations:
-        ALABAMA = "AL"
-        ALASKA = "AK"
-        ARIZONA = "AZ"
-        ARKANSAS = "AR"
-        CALIFORNIA = "CA"
-        COLORADO = "CO"
-        CONNECTICUT = "CT"
-        DELAWARE = "DE"
-        FLORIDA = "FL"
-        GEORGIA = "GA"
-        HAWAII = "HI"
-        IDAHO = "ID"
-        ILLINOIS = "IL"
-        INDIANA = "IN"
-        IOWA = "IA"
-        KANSAS = "KS"
-        KENTUCKY = "KY"
-        LOUISIANA = "LA"
-        MAINE = "ME"
-        MARYLAND = "MD"
-        MASSACHUSETTS = "MA"
-        MICHIGAN = "MI"
-        MINNESOTA = "MN"
-        MISSISSIPPI = "MS"
-        MISSOURI = "MO"
-        MONTANA = "MT"
-        NEBRASKA = "NE"
-        NEVADA = "NV"
-        NEW_HAMPSHIRE = "NH"
-        NEW_JERSEY = "NJ"
-        NEW_MEXICO = "NM"
-        NEW_YORK = "NY"
-        NORTH_CAROLINA = "NC"
-        NORTH_DAKOTA = "ND"
-        OHIO = "OH"
-        OKLAHOMA = "OK"
-        OREGON = "OR"
-        PENNSYLVANIA = "PA"
-        RHODE_ISLAND = "RI"
-        SOUTH_CAROLINA = "SC"
-        SOUTH_DAKOTA = "SD"
-        TENNESSEE = "TN"
-        TEXAS = "TX"
-        UTAH = "UT"
-        VERMONT = "VT"
-        VIRGINIA = "VA"
-        WASHINGTON = "WA"
-        WEST_VIRGINIA = "WV"
-        WISCONSIN = "WI"
-        WYOMING = "WY"
-        ONTARIO = "ON"
-        QUEBEC = "QC"
-        NOVA_SCOTIA = "NS"
-        NEW_BRUNSWICK = "NB"
-        MANITOBA = "MB"
-        BRITISH_COLUMBIA = "BC"
-        PRINCE_EDWARD_ISLAND = "PE"
-        SASKATCHEWAN = "SK"
-        ALBERTA = "AB"
-        NEWFOUNDLAND_AND_LABRADOR = "NL"
-
     category_mapping = {
         categories.STRICTLY_PLATONIC: "Strictly Platonic",
         categories.WOMEN_SEEKING_WOMEN: "Women seeking Women",
@@ -87,67 +25,175 @@ class ad(models.Model):
         categories.MEN_SEEKING_MEN: "Men seeking Men",
     }
 
+    class locations:
+        ALABAMA = "01"
+        ALASKA = "02"
+        ARIZONA = "03"
+        ARKANSAS = "04"
+        CALIFORNIA = "05"
+        COLORADO = "06"
+        CONNECTICUT = "07"
+        DELAWARE = "08"
+        FLORIDA = "09"
+        GEORGIA = "10"
+        HAWAII = "11"
+        IDAHO = "12"
+        ILLINOIS = "13"
+        INDIANA = "14"
+        IOWA = "15"
+        KANSAS = "16"
+        KENTUCKY = "17"
+        LOUISIANA = "18"
+        MAINE = "19"
+        MARYLAND = "20"
+        MASSACHUSETTS = "21"
+        MICHIGAN = "22"
+        MINNESOTA = "23"
+        MISSISSIPPI = "24"
+        MISSOURI = "25"
+        MONTANA = "26"
+        NEBRASKA = "27"
+        NEVADA = "28"
+        NEW_HAMPSHIRE = "29"
+        NEW_JERSEY = "30"
+        NEW_MEXICO = "31"
+        NEW_YORK = "32"
+        NORTH_CAROLINA = "33"
+        NORTH_DAKOTA = "34"
+        OHIO = "35"
+        OKLAHOMA = "36"
+        OREGON = "37"
+        PENNSYLVANIA = "38"
+        RHODE_ISLAND = "39"
+        SOUTH_CAROLINA = "40"
+        SOUTH_DAKOTA = "41"
+        TENNESSEE = "42"
+        TEXAS = "43"
+        UTAH = "44"
+        VERMONT = "45"
+        VIRGINIA = "46"
+        WASHINGTON = "47"
+        WEST_VIRGINIA = "48"
+        WISCONSIN = "49"
+        WYOMING = "50"
+        ONTARIO = "51"
+        QUEBEC = "52"
+        NOVA_SCOTIA = "53"
+        NEW_BRUNSWICK = "54"
+        MANITOBA = "55"
+        BRITISH_COLUMBIA = "56"
+        PRINCE_EDWARD_ISLAND = "57"
+        SASKATCHEWAN = "58"
+        ALBERTA = "59"
+        NEWFOUNDLAND_AND_LABRADOR = "60"
+        UNITED_KINGDOM = "61"
+        BRAZIL = "62"
+        FRANCE = "63"
+        AUSTRALIA = "64"
+        GERMANY = "65"
+        NETHERLANDS = "66"
+        MEXICO = "67"
+        SPAIN = "68"
+        ARGENTINA = "69"
+        BELGIUM = "70"
+        ITALY = "71"
+        IRELAND = "72"
+        NORWAY = "73"
+        DENMARK = "74"
+        FINLAND = "75"
+        NEW_ZEALAND = "76"
+        INDIA = "77"
+        GUYANA = "78"
+        CHINA = "79"
+        SWITZERLAND = "80"
+        PHILIPPINES = "81"
+        VIETNAM = "82"
+        INDONESIA = "83"
+
     location_mapping = {
-        locations.ALABAMA: "Alabama",
-        locations.ALASKA: "Alaska",
-        locations.ARIZONA: "Arizona",
-        locations.ARKANSAS: "Arkansas",
-        locations.CALIFORNIA: "California",
-        locations.COLORADO: "Colorado",
-        locations.CONNECTICUT: "Connecticut",
-        locations.DELAWARE: "Delaware",
-        locations.FLORIDA: "Florida",
-        locations.GEORGIA: "Georgia",
-        locations.HAWAII: "Hawaii",
-        locations.IDAHO: "Idaho",
-        locations.ILLINOIS: "Illinois",
-        locations.INDIANA: "Indian",
-        locations.IOWA: "Iowa",
-        locations.KANSAS: "Kansas",
-        locations.KENTUCKY: "Kentucky",
-        locations.LOUISIANA: "Louisiana",
-        locations.MAINE: "Maine",
-        locations.MARYLAND: "Maryland",
-        locations.MASSACHUSETTS: "Massachusetts",
-        locations.MICHIGAN: "Michigan",
-        locations.MINNESOTA: "Minnesota",
-        locations.MISSISSIPPI: "Mississippi",
-        locations.MISSOURI: "Missouri",
-        locations.MONTANA: "Montana",
-        locations.NEBRASKA: "Nebraska",
-        locations.NEVADA: "Nevada",
-        locations.NEW_HAMPSHIRE: "New Hampshire",
-        locations.NEW_JERSEY: "New Jersey",
-        locations.NEW_MEXICO: "New Mexico",
-        locations.NEW_YORK: "New York",
-        locations.NORTH_CAROLINA: "North Carolina",
-        locations.NORTH_DAKOTA: "North Dakota",
-        locations.OHIO: "Ohio",
-        locations.OKLAHOMA: "Oklahoma",
-        locations.OREGON: "Oregon",
-        locations.PENNSYLVANIA: "Pennsylvania",
-        locations.RHODE_ISLAND: "Rhode Island",
-        locations.SOUTH_CAROLINA: "South Carolina",
-        locations.SOUTH_DAKOTA: "South Dakota",
-        locations.TENNESSEE: "Tennessee",
-        locations.TEXAS: "Texas",
-        locations.UTAH: "Utah",
-        locations.VERMONT: "Vermont",
-        locations.VIRGINIA: "Virginia",
-        locations.WASHINGTON: "Washington",
-        locations.WEST_VIRGINIA: "West Virginia",
-        locations.WISCONSIN: "Wisconsin",
-        locations.WYOMING: "Wyoming",
-        locations.ONTARIO: "Ontario",
-        locations.QUEBEC: "Quebec",
-        locations.NOVA_SCOTIA: "Nova Scotia",
-        locations.NEW_BRUNSWICK: "New Brunswick",
-        locations.MANITOBA: "Manitoba",
-        locations.BRITISH_COLUMBIA: "British Columbia",
-        locations.PRINCE_EDWARD_ISLAND: "Prince Edward Island",
-        locations.SASKATCHEWAN: "Saskatchewan",
-        locations.ALBERTA: "Alberta",
-        locations.NEWFOUNDLAND_AND_LABRADOR: "Newfoundland and Labrador",
+        locations.ALABAMA: "United States - Alabama",
+        locations.ALASKA: "United States - Alaska",
+        locations.ARIZONA: "United States - Arizona",
+        locations.ARKANSAS: "United States - Arkansas",
+        locations.CALIFORNIA: "United States - California",
+        locations.COLORADO: "United States - Colorado",
+        locations.CONNECTICUT: "United States - Connecticut",
+        locations.DELAWARE: "United States - Delaware",
+        locations.FLORIDA: "United States - Florida",
+        locations.GEORGIA: "United States - Georgia",
+        locations.HAWAII: "United States - Hawaii",
+        locations.IDAHO: "United States - Idaho",
+        locations.ILLINOIS: "United States - Illinois",
+        locations.INDIANA: "United States - Indiana",
+        locations.IOWA: "United States - Iowa",
+        locations.KANSAS: "United States - Kansas",
+        locations.KENTUCKY: "United States - Kentucky",
+        locations.LOUISIANA: "United States - Louisiana",
+        locations.MAINE: "United States - Maine",
+        locations.MARYLAND: "United States - Maryland",
+        locations.MASSACHUSETTS: "United States - Massachusetts",
+        locations.MICHIGAN: "United States - Michigan",
+        locations.MINNESOTA: "United States - Minnesota",
+        locations.MISSISSIPPI: "United States - Mississippi",
+        locations.MISSOURI: "United States - Missouri",
+        locations.MONTANA: "United States - Montana",
+        locations.NEBRASKA: "United States - Nebraska",
+        locations.NEVADA: "United States - Nevada",
+        locations.NEW_HAMPSHIRE: "United States - New Hampshire",
+        locations.NEW_JERSEY: "United States - New Jersey",
+        locations.NEW_MEXICO: "United States - New Mexico",
+        locations.NEW_YORK: "United States - New York",
+        locations.NORTH_CAROLINA: "United States - North Carolina",
+        locations.NORTH_DAKOTA: "United States - North Dakota",
+        locations.OHIO: "United States - Ohio",
+        locations.OKLAHOMA: "United States - Oklahoma",
+        locations.OREGON: "United States - Oregon",
+        locations.PENNSYLVANIA: "United States - Pennsylvania",
+        locations.RHODE_ISLAND: "United States - Rhode Island",
+        locations.SOUTH_CAROLINA: "United States - South Carolina",
+        locations.SOUTH_DAKOTA: "United States - South Dakota",
+        locations.TENNESSEE: "United States - Tennessee",
+        locations.TEXAS: "United States - Texas",
+        locations.UTAH: "United States - Utah",
+        locations.VERMONT: "United States - Vermont",
+        locations.VIRGINIA: "United States - Virginia",
+        locations.WASHINGTON: "United States - Washington",
+        locations.WEST_VIRGINIA: "United States - West Virginia",
+        locations.WISCONSIN: "United States - Wisconsin",
+        locations.WYOMING: "United States - Wyoming",
+        locations.ONTARIO: "Canada - Ontario",
+        locations.QUEBEC: "Canada - Quebec",
+        locations.NOVA_SCOTIA: "Canada - Nova Scotia",
+        locations.NEW_BRUNSWICK: "Canada - New Brunswick",
+        locations.MANITOBA: "Canada - Manitoba",
+        locations.BRITISH_COLUMBIA: "Canada - British Columbia",
+        locations.PRINCE_EDWARD_ISLAND: "Canada - Prince Edward Island",
+        locations.SASKATCHEWAN: "Canada - Saskatchewan",
+        locations.ALBERTA: "Canada - Alberta",
+        locations.NEWFOUNDLAND_AND_LABRADOR: "Canada - Newfoundland and Labrador",
+        locations.UNITED_KINGDOM: "United Kingdom",
+        locations.BRAZIL: "Brazil",
+        locations.FRANCE: "France",
+        locations.AUSTRALIA: "Australia",
+        locations.GERMANY: "Germany",
+        locations.NETHERLANDS: "Netherlands",
+        locations.MEXICO: "Mexico",
+        locations.SPAIN: "Spain",
+        locations.ARGENTINA: "Argentina",
+        locations.BELGIUM: "Belgium",
+        locations.ITALY: "Italy",
+        locations.IRELAND: "Ireland",
+        locations.NORWAY: "Norway",
+        locations.DENMARK: "Denmark",
+        locations.FINLAND: "Finland",
+        locations.NEW_ZEALAND: "New Zealand",
+        locations.INDIA: "India",
+        locations.GUYANA: "Guyana",
+        locations.CHINA: "China",
+        locations.SWITZERLAND: "Switzerland",
+        locations.PHILIPPINES: "Philippines",
+        locations.VIETNAM: "Vietnam",
+        locations.INDONESIA: "Indonesia",
     }
 
     title = models.CharField(max_length=255)

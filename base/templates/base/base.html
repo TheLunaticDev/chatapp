@@ -13,11 +13,18 @@
     </head>
     <body class="bg-gray-100 flex">
         <nav class="bg-white w-64 h-screen px-6 py-8 shadow-md border-2 border-gray-300 rounded-lg">
-            <div class="mb-8 text-center">
-                <a href="{% url 'home' %}" class="block text-3xl font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200">OnlyMarriage</a>
-            </div>
+            <a href="{% url 'home' %}" class="mb-8 block text-3xl font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200 text-center">
+                <div class="relative inline-block">
+                    <!-- Emoji centered above text -->
+                    <span class="block text-lg absolute -top-4 inset-x-0 text-center">💍</span>
+                    <!-- OnlyMarriage text -->
+                    <span class="block pt-4">OnlyMarriage</span>
+                </div>
+            </a>
+
             <ul class="space-y-2 text-center text-xl">
                 {% if user.is_authenticated %}
+                    <a href="{% url 'create_ad' %}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">post an ad</a>
                     <a href="{% url 'profile' user 1 %}" class="block text-gray-700 hover:text-blue-500 transition-colors duration-200">Profile</a>
                     <a href="{% url 'chat_list' %}" class="block text-gray-700 hover:text-blue-500 transition-colors duration-200">Chat</a>
                     <a href="{% url 'home' %}" class="block text-gray-700 hover:text-blue-500 transition-colors duration-200">Ads</a>
