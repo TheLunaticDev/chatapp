@@ -4,84 +4,73 @@
 {% block title %}{% if ad is not None %}Ad info for ad id: {{ ad.id }}{% else %}Ad not found!{% endif %}{% endblock %}
 {% block content %}
     <div class="container mx-auto px-4 py-6">
-        <!-- Ad Info Header -->
-        <h1 class="text-2xl font-bold mb-4">Ad Info</h1>
-
         {% if ad is not None %}
             <!-- Ad Details Card -->
             <div class="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                 <!-- Ad Metadata -->
                 <div class="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
-                    <span class="text-sm text-gray-500">{{ ad.created_on|date:"M d, Y" }}</span>
-                    <a href="{% url 'profile' ad.poster.username 1 %}" class="text-blue-500 hover:underline">{{ ad.poster }}</a>
-                    <span class="text-sm text-gray-500">{{ ad.location }}</span>
+                    <span class="text-md text-gray-500">Posted <span class="underline">{{ ad.created_on|date:"Y-m-d h:i" }}</span></span>
+                    <div class="flex item-center justify-between">
+                    {% if user.is_authenticated and user.id == ad.poster.id %}
+                        <a href="{% url 'edit_ad' ad.id %}" class="text-blue-500 hover:text-white px-4 py-2 rounded hover:bg-blue-600">Edit Ad</a>
+                    {% endif %}
+                    {% if user.id == ad.poster.id %}
+                        <form action="{% url 'delete_ad' ad.id %}" method="get" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete Ad</button>
+                        </form>
+                    {% endif %}
+                    </div>
                 </div>
 
                 <!-- Ad Title and Edit Ad Link -->
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold">{{ ad.title }}</h2>
+                    <h2 class="text-xl font-semibold">{{ ad.title }} ({{ ad.location }})</h2>
 
-                    {% if user.is_authenticated and user.id == ad.poster.id %}
-                        <a href="{% url 'edit_ad' ad.id %}" class="text-blue-500 hover:text-white px-4 py-2 rounded hover:bg-blue-600">Edit Ad</a>
-                    {% endif %}
                 </div>
 
                 <p class="flex item-center space-x-2">
-                    <strong class="text-gray-700 mb-2">Status:</strong>
-                    <span class="w-3 h-3 my-2 rounded-full {% if ad.is_active and ad.is_paid %}bg-green-500{% elif not ad.is_active and ad.is_paid %}bg-yellow-300{% elif not ad.is_paid %}bg-red-500{% else %}bg-gray-900{% endif %}"></span>
-                    <span class="text-gray-700 mb-2">
-                        {% if ad.is_active and ad.is_paid %}
-                            Online
-                        {% elif not ad.is_active and ad.is_paid %}
-                            Flagged
-                        {% elif not ad.is_paid %}
-                            Unpaid
-                        {% else %}
-                            Unknown
-                        {% endif %}
-                    </span>
+                    {% if user.is_authenticated and user.id == ad.poster.id %}
+                        <strong class="text-gray-700 mb-2">Status:</strong>
+                        <span class="w-3 h-3 my-2 rounded-full {% if ad.is_active and ad.is_paid %}bg-green-500{% elif not ad.is_active and ad.is_paid %}bg-yellow-300{% elif not ad.is_paid %}bg-red-500{% else %}bg-gray-900{% endif %}"></span>
+                        <span class="text-gray-700 mb-2">
+                            {% if ad.is_active and ad.is_paid %}
+                                Online
+                            {% elif not ad.is_active and ad.is_paid %}
+                                Flagged
+                            {% elif not ad.is_paid %}
+                                Unpaid
+                            {% else %}
+                                Unknown
+                            {% endif %}
+                        </span>
+                    {% endif %}
                 </p>
 
                 <!-- Last Updated -->
-                <p class="text-gray-700 mb-2"><strong>Last Updated on:</strong> {{ ad.last_updated|date:"M d, Y" }}</p>
+                <!--<p class="text-gray-700 mb-2"><strong>Last Updated on:</strong> {{ ad.last_updated|date:"M d, Y" }}</p> -->
 
 
                 <!-- Category -->
-                <p class="text-gray-700 mb-2"><strong>Category:</strong> {{ ad.category }}</p>
+                <!-- <p class="text-gray-700 mb-2"><strong>Category:</strong> {{ ad.category }}</p> -->
 
                 <!-- Location -->
-                <p class="text-gray-700 mb-2"><strong>Location:</strong> {{ ad.location }}</p>
-
-                <!-- Flag Ad Form -->
-                {% if user.is_authenticated %}
-                    <div class="flex gap-4 mb-4">
-                        {% if user.id != ad.poster.id %}
-                        <form action="{% url 'flag_ad' ad.id %}" method="post" class="inline">
-                            {% csrf_token %}
-                            <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Flag Ad</button>
-                        </form>
-                        {% endif %}
-                        {% if user.id == ad.poster.id %}
-                            <form action="{% url 'delete_ad' ad.id %}" method="get" class="inline">
-                                {% csrf_token %}
-                                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete Ad</button>
-                            </form>
-                        {% endif %}
-                    </div>
-                {% endif %}
+                <!-- <p class="text-gray-700 mb-2"><strong>Location:</strong> {{ ad.location }}</p> -->
 
                 <!-- Description -->
-                <hr class="my-4 border-gray-300" />
-                <h3 class="text-lg font-semibold mb-2">Description:</h3>
+                <!-- <hr class="my-4 border-gray-300" /> -->
                 <p class="text-gray-700 mb-4">{{ ad.description }}</p>
 
                 <!-- Tags -->
-                <p class="text-gray-700 font-semibold mb-2">Tags:</p>
-                <ul class="list-disc list-inside text-gray-700">
-                    {% for tag in ad.tags %}
-                        <li>{{ tag }}</li>
-                    {% endfor %}
-                </ul>
+                <!-- <p class="text-gray-700 font-semibold mb-2">Tags:</p>
+                     <ul class="list-disc list-inside text-gray-700">
+                     {% for tag in ad.tags %}
+                     <li>{{ tag }}</li>
+                     {% endfor %}
+                     </ul> -->
+                {% if user.is_authenticated and user.id != ad.poster.id %}
+                    <a href="{% url 'start_conversation_view' ad.poster.id %}" class="inline-block px-4 py-2 bg-violet-300 text-violet-700 rounded border border-violet-700 hover:bg-violet-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">reply</a>
+                {% endif %}
             </div>
         {% else %}
             <!-- No Ad Available Message -->

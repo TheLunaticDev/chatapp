@@ -4,27 +4,27 @@
 {% block title %}Ads List{% endblock %}
 {% block content %}
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-6">Ads List</h1>
+        <h1 class="text-4xl font-bold text-gray-800 mb-6">Personals</h1>
 
         {% if ad_list %}
             <div class="space-y-4">
                 {% for ad in ad_list %}
                     <div class="bg-white border border-gray-300 rounded-lg shadow-md p-4 flex items-center space-x-4">
-                        <div class="flex-shrink-0 text-gray-500 text-sm">
-                            {{ ad.created_on|date:"F j, Y" }}
-                        </div>
                         <div class="flex-1">
-                            <a href="/ads/info/{{ ad.id }}" class="text-blue-600 hove:text-blue-800 text-lg font-semibold">
+                            <a href="/ads/info/{{ ad.id }}" class="text-blue-600 hove:text-blue-800 text-md font-medium">
                                 {{ ad.title|slice:":75" }}{% if ad.title|length > 75 %}...{% endif %}
                             </a>
-                        </div>
-                        <div class="text-gray-600 text-sm">
-                            {{ ad.get_location_display }}
+                            <div class="text-gray-600 text-sm inline">
+                                • {{ ad.get_location_display }}
+                            </div>
+                            <div class="flex-shrink-0 text-gray-500 text-sm inline">
+                                • {{ ad.created_on|date:"m/d" }}
+                            </div>
                         </div>
                         {% if user.is_authenticated %}
                             <form action="{% url 'flag_ad' ad.id %}" method="post" class="inline">
                                 {% csrf_token %}
-                                <input type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" value="Flag Ad" />
+                                <input type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" value="Flag" />
                             </form>
                         {% endif %}
                     </div>

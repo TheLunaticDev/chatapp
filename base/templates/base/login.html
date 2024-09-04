@@ -1,60 +1,87 @@
-{% extends 'base/base.html' %}
+<!DOCTYPE html>
 
+{% load static %}
 {% load form_filters %}
 
-{% block meta_description %}Login to your account on OnlyMarriage{% endblock %}
-{% block title %}Login{% endblock %}
-{% block content %}
-<div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-    <h1 class="text-3xl font-bold mb-6">Login to Your Account</h1>
-    <form action="/login/" method="POST" class="space-y-4">
-        {% csrf_token %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Login to your account on OnlyMarriage" />
+        <meta name="author" content="TheLunaticDev" />
+        <title>Login</title>
+        <link href="{% static 'css/tailwind.css' %}" rel="stylesheet" />
+    </head>
+    <body class="bg-login-bg bg-cover flex">
+        <div class="bg-white absolute left-5 top-5 w-72 px-6 py-8 shadow-md border-2 border-gray-300 rounded-lg">
+            <a href="{% url 'home' %}" class="mb-6 block text-3xl font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200 text-center">
+                <div class="relative inline-block">
+                    <!-- Emoji centered above text -->
+                    <span class="block text-lg absolute -top-4 inset-x-0 text-center">💍</span>
+                    <!-- OnlyMarriage text -->
+                    <span class="block pt-4">OnlyMarriage</span>
+                </div>
+            </a>
+            <p class="text-md text-center text-gray-700 font-medium">Post to find your partner</p>
+        </div>
 
-        {% if form.errors %}
-            <div class="mb-4">
-                <ul class="text-red-600">
-                    {% for field in form %}
-                        {% if field.errors %}
-                            <li class="text-sm">
-                                {% for error in field.errors %}
-                                    {{ field.label }}: {{ error }}
-                                {% endfor %}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                    {% if form.non_field_errors %}
-                        <li>
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
+
+        <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md absolute right-5 top-5">
+            <h1 class="text-3xl font-bold mb-6">Login to Your Account</h1>
+            <form action="/login/" method="POST" class="space-y-4">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="mb-4">
+                        <ul class="text-red-600">
+                            {% for field in form %}
+                                {% if field.errors %}
+                                    <li class="text-sm">
+                                        {% for error in field.errors %}
+                                            {{ field.label }}: {{ error }}
+                                        {% endfor %}
+                                    </li>
+                                {% endif %}
                             {% endfor %}
-                        </li>
+                            {% if form.non_field_errors %}
+                                <li>
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Username</label>
+                    {{ form.username|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+                    {% if form.username.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.username.errors }}</p>
                     {% endif %}
-                </ul>
-            </div>
-        {% endif %}
+                </div>
 
-        <div class="form-group">
-            <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Username</label>
-            {{ form.username|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
-            {% if form.username.errors %}
-                <p class="mt-1 text-sm text-red-600">{{ form.username.errors }}</p>
-            {% endif %}
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+                    {{ form.password|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
+                    {% if form.password.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.password.errors }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Login
+                </button>
+            </form>
+            <p class="mt-4 text-sm text-gray-600">
+                Don't have an account? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register</a> instead!
+            </p>
         </div>
-
-        <div class="form-group">
-            <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
-            {{ form.password|add_class:"mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" }}
-            {% if form.password.errors %}
-                <p class="mt-1 text-sm text-red-600">{{ form.password.errors }}</p>
-            {% endif %}
+        <div class="absolute left-1/2 -translate-x-1/2 bottom-4">
+            <a href="{% url 'terms_of_use' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Terms of Use</a>
+            <a href="{% url 'privacy_policy' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Privacy Policy</a>
         </div>
-
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Login
-        </button>
-    </form>
-    <p class="mt-4 text-sm text-gray-600">
-        Don't have an account? <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register</a> instead!
-    </p>
-</div>
-{% endblock %}
+    </body>
+</html>

@@ -74,3 +74,11 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect(login_view)
+
+
+def privacy_policy(request):
+    return render(request, "base/privacy_policy.html")
+
+
+def terms_of_use(request):
+    return render(request, "base/terms_of_use.html")

@@ -3,6 +3,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
@@ -204,6 +205,15 @@ def profile_view(request, username, page_no=1):
     }
 
     return render(request, "ads/profile.html", context)
+
+
+@login_required
+def delete_user_view(request):
+    if request.method == "POST":
+        request.user.delete()
+        logout(request)
+        return redirect("home")
+    return render(request, "ads/delete_user_confirmation.html")
 
 
 @login_required
