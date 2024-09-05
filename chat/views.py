@@ -32,7 +32,12 @@ def conversation_view(request, conversation_id):
                 blocker=participant, blocked=request.user
             ).exists()
         ):
-            raise Http404("You cannot communicate with this user.")
+            return render(
+                request,
+                "base/403.html",
+                {"message": "You are not allowed to contact this person."},
+                status=403,
+            )
 
     if not conversation.participants.filter(id=request.user.id).exists():
         raise Http404("You are not authorized to view this conversation.")
