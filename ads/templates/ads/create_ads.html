@@ -39,7 +39,7 @@
 
         <p class="text-sm text-gray-700 bg-yellow-100 border-l-4 border-yellow-500 p-3 my-4">You will be redirected to our payment gateway after submitting the form.<br />
             <input type="checkbox" class="mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" value="terms-agreed" name="terms-agreed" id="terms-agreed" required />
-            <label for="terms-agreed" class="text-sm font-medium text-gray-700">I accept the <a href="#" class="underline text-blue-500">terms of use.</a></label>
+            <label for="terms-agreed" class="text-sm font-medium text-gray-700">I accept the <a href="{% url 'terms_of_use' %}" class="underline text-blue-500">Terms of Use</a> and <a href="{% url 'privacy_policy' %}" class="underline text-blue-500">Privacy Policy</a>.</label>
         </p>
         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
             Submit

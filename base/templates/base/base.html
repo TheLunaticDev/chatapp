@@ -12,7 +12,8 @@
         {% block extra_head %}{% endblock %}
     </head>
     <body class="bg-gray-100 flex">
-        <nav class="bg-white w-64 h-screen px-6 py-8 shadow-md border-2 border-gray-300 rounded-lg">
+        <nav class="flex flex-col h-screen bg-white w-64 h-screen px-6 py-8 shadow-md border-2 border-gray-300 rounded-lg">
+            <div class="flex-grow">
             <a href="{% url 'home' %}" class="mb-8 block text-3xl font-bold text-blue-600 hover:text-blue-800 transition-colors duration-200 text-center">
                 <div class="relative inline-block">
                     <!-- Emoji centered above text -->
@@ -34,6 +35,11 @@
                     <a href="{% url 'register' %}" class="block text-gray-700 hover:text-blue-500 transition-colors duration-200">Register</a>
                 {% endif %}
             </ul>
+            </div>
+                <div class="mt-auto space-y-2 flex flex-col items-center">
+                    <a href="{% url 'terms_of_use' %}" class="w-3/4 text-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Terms of Use</a>
+                    <a href="{% url 'privacy_policy' %}" class="w-3/4 text-center text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">Privacy Policy</a>
+                </div>
         </nav>
         <main role="main" class="flex-1 p-8">
             {% block content %}

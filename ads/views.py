@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib import messages
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import ad, tag
 from btcpay import BTCPayClient
@@ -70,40 +71,47 @@ def create_ads_view(request):
                     new_tag, created = tag.objects.get_or_create(name=tag_name)
                     new_ad.tags.add(new_tag)
 
-            payment = Payment.objects.create(linked_ad=new_ad, payment_status="pending")
-
-            client = get_btcpay_client()
-
-            try:
-                invoice = client.create_invoice(
-                    {
-                        "price": "5.00",
-                        "currency": "USD",
-                        "orderID": str(new_ad.id),
-                        "itemDesc": new_ad.title,
-                        "redirectURL": request.build_absolute_uri(
-                            f"/ads/payment_success/{new_ad.id}"
-                        ),
-                        "notificationURL": request.build_absolute_uri(
-                            "/ads/payment_notification/"
-                        ),
-                    }
+            if new_ad.category != ad.categories.WOMEN_SEEKING_MEN:
+                payment = Payment.objects.create(
+                    linked_ad=new_ad, payment_status="pending"
                 )
+                client = get_btcpay_client()
 
-                payment.invoice_id = invoice["id"]
-                payment.save()
+                try:
+                    invoice = client.create_invoice(
+                        {
+                            "price": "5.00",
+                            "currency": "USD",
+                            "orderID": str(new_ad.id),
+                            "itemDesc": new_ad.title,
+                            "redirectURL": request.build_absolute_uri(
+                                f"/ads/payment_success/{new_ad.id}"
+                            ),
+                            "notificationURL": request.build_absolute_uri(
+                                "/ads/payment_notification/"
+                            ),
+                        }
+                    )
 
-                return redirect(invoice["url"])
-            except Exception as e:
-                print(e)
-                return render(
-                    request,
-                    "ads/create_ads.html",
-                    {
-                        "form": form,
-                        "error": "Failed to create payment. Please try again.",
-                    },
-                )
+                    payment.invoice_id = invoice["id"]
+                    payment.save()
+
+                    return redirect(invoice["url"])
+                except Exception as e:
+                    print(e)
+                    return render(
+                        request,
+                        "ads/create_ads.html",
+                        {
+                            "form": form,
+                            "error": "Failed to create payment. Please try again.",
+                        },
+                    )
+            else:
+                new_ad.is_paid = True
+                new_ad.save()
+                url = reverse("ad_info", kwargs={"id": new_ad.id})
+                return redirect(url)
     else:
         form = AdForm()
 

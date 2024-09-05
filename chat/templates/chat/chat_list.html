@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 
+{% load block_filters %}
+
 {% block meta_description %}OnlyMarriage Conversations!{% endblock %}
 {% block title %}ChatList{% endblock %}
 {% block content %}
@@ -8,10 +10,18 @@
         {% for conversation in conversations %}
             <li class="bg-white shadow rounded-lg p-4 border border-gray-200 hover:bg-gray-100">
                 <a href="{% url 'conversation_view' conversation.id %}" class="text-blue-600 hover:text-blue-800">
-                    Conversation with
                     {% for participant in conversation.participants.all %}
                         {% if participant != user %}
-                            <span class="font-semibold">{{ participant.username }}</span>
+                            <div class="flex items-center justify-between">
+                                <span class="flex-grow font-semibold">Conversation with: {{ participant.username }}</span>
+                                <div class="flex space-x-2 justify-end">
+                                    {% if not request.user|is_blocked:participant %}
+                                        <a href="{% url 'block_user' participant.id %}" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Block</a>
+                                    {% else %}
+                                        <a href="{% url 'unblock_user' participant.id %}" class="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2">Unblock</a>
+                                    {% endif %}
+                                </div>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </a>

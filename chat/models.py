@@ -20,3 +20,15 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.sender.username} at {self.timestamp}"
+
+
+class BlockedUser(models.Model):
+    blocker = models.ForeignKey(User, related_name="blocking", on_delete=models.CASCADE)
+    blocked = models.ForeignKey(User, related_name="blocked", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.blocker.username} blocked {self.blocked.username}"
+
+    class Meta:
+        unique_together = ("blocker", "blocked")
