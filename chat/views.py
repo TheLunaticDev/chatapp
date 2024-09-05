@@ -12,8 +12,32 @@ def chat_list_view(request):
         "-updated_at"
     )
 
+    conversation_data = []
+
+    for conversation in conversations:
+        participants = conversation.participants.all()
+        blocked = False
+        for participant in participants:
+            if (
+                BlockedUser.objects.filter(
+                    blocker=request.user, blocked=participant
+                ).exists()
+                or BlockedUser.objects.filter(
+                    blocker=participant, blocked=request.user
+                ).exists()
+            ):
+                blocked = True
+                break
+        conversation_data.append(
+            {
+                "conversation": conversation,
+                "blocked": blocked,
+                "participants": participants,
+            }
+        )
+
     context = {
-        "conversations": conversations,
+        "conversation_data": conversation_data,
     }
 
     return render(request, "chat/chat_list.html", context)
